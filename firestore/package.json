@@ -1,0 +1,56 @@
+{
+  "name": "lingonfirestore",
+  "version": "1.0.0",
+  "description": "Lingon firestore",
+  "main": "index.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lingonapp/functions.git"
+  },
+  "author": "Marcus Hansson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lingonapp/functions/issues"
+  },
+  "homepage": "https://github.com/lingonapp/functions#readme",
+  "scripts": {
+    "format": "eslint --fix src/**/*.ts && eslint src/**/*.ts",
+    "pretest": "tsc",
+    "test": "jest --watch --runInBand",
+    "rules:generate": "fireward -i rules.ward > firestore.rules",
+    "rules:generate-ts": "fireward -l ts -i rules.ward > __generated_types.ts"
+  },
+  "devDependencies": {
+    "@firebase/testing": "0.16.6",
+    "@types/jest": "24.9.0",
+    "@types/node": "13.1.8",
+    "@typescript-eslint/eslint-plugin": "2.17.0",
+    "@typescript-eslint/parser": "2.17.0",
+    "eslint": "6.8.0",
+    "eslint-config-prettier": "6.9.0",
+    "eslint-plugin-jest": "23.6.0",
+    "eslint-plugin-prettier": "3.1.2",
+    "firebase": "7.7.0",
+    "fireward": "1.4.2",
+    "husky": "4.2.1",
+    "jest": "25.1.0",
+    "lint-staged": "10.0.2",
+    "prettier": "1.19.1",
+    "reflect-metadata": "0.1.13",
+    "source-map-support": "0.5.16",
+    "ts-jest": "25.0.0",
+    "ts-node": "8.6.2",
+    "typescript": "3.7.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && eslint src/**/*.ts"
+    }
+  },
+  "lint-staged": {
+    "*.ts": "eslint --cache-location src/**/*.ts --fix"
+  },
+  "dependencies": {
+    "ts-protoc-gen": "0.12.0"
+  }
+}

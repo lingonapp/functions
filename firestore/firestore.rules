@@ -1,0 +1,99 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isSignedIn() {
+      return request.auth.uid != null;
+    }
+    function requestMatchesUID() {
+      return request.auth.uid == request.resource.data.uid;
+    }
+    function resourceMatchesUID() {
+      return request.auth.uid == resource.data.uid;
+    }
+    function pathMatchesUID(path) {
+      return request.auth.uid == path;
+    }
+    function isLoggedInAsUser(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    function is____User(data, prev) {
+      return (
+        ( request.method != 'update' || ( data.name.length > 0 ) )
+      ) && data.size() >= 0 && data.size() <= 3
+      && data.keys().hasOnly(['name', 'isInNeed', 'photoUrl'])
+      && (
+        !data.keys().hasAny(['name'])
+        || data.name is string
+      )
+      && (
+        !data.keys().hasAny(['isInNeed'])
+        || data.isInNeed is bool
+      )
+      && (
+        !data.keys().hasAny(['photoUrl'])
+        || data.photoUrl is string
+      );
+    }
+    function is____Location(data, prev) {
+      return data.size() >= 0 && data.size() <= 4
+      && data.keys().hasOnly(['inNeedOf', 'isInNeed', 'name', 'position'])
+      && (
+        !data.keys().hasAny(['inNeedOf'])
+        || data.inNeedOf is int
+      )
+      && (
+        !data.keys().hasAny(['isInNeed'])
+        || data.isInNeed is bool
+      )
+      && (
+        !data.keys().hasAny(['name'])
+        || data.name is string
+      )
+      && (
+        !data.keys().hasAny(['position'])
+        || (!(prev!=null && 'position' in prev) && is____Position(data.position, null) || prev!=null && 'position' in prev && is____Position(data.position, prev.position))
+      );
+    }
+    function is____Position(data, prev) {
+      return data.size() >= 0 && data.size() <= 2
+      && data.keys().hasOnly(['geohash', 'geopoint'])
+      && (
+        !data.keys().hasAny(['geohash'])
+        || data.geohash is string
+      )
+      && (
+        !data.keys().hasAny(['geopoint'])
+        || (!(prev!=null && 'geopoint' in prev) && is____Geopoint(data.geopoint, null) || prev!=null && 'geopoint' in prev && is____Geopoint(data.geopoint, prev.geopoint))
+      );
+    }
+    function is____GeoPoint(data, prev) {
+      return data.keys().hasAll(['longitude', 'latitude'])
+      && data.size() >= 2 && data.size() <= 2
+      && data.keys().hasOnly(['longitude', 'latitude'])
+      && (data.longitude is float || data.longitude is int)
+      && (data.latitude is float || data.latitude is int);
+    }
+    match /users/{userdoc} {
+      function is______PathType(data, prev) {
+        return (!(prev!=null) && is____User(data, null) || prev!=null && is____User(data, prev));
+      }
+      allow read: if isSignedIn();
+      allow create, update: if (!(resource!=null && resource.data!=null) && is______PathType(request.resource.data, null) || resource!=null && resource.data!=null && is______PathType(request.resource.data, resource.data)) && (pathMatchesUID(userdoc));
+      allow delete: if false;
+    }
+    match /locations/{locationDoc} {
+      allow read: if isSignedIn();
+      allow create, update: if pathMatchesUID(locationDoc);
+      allow delete: if false;
+    }
+    match /chats/{chatDoc} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if false;
+      match /messages/{messageId} {
+        allow read, write: if isSignedIn();
+      }
+    }
+  }
+}

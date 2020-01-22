@@ -1,0 +1,72 @@
+rules_version = '2' // optional, see https://firebase.google.com/docs/firestore/security/get-started#security_rules_version_2
+
+function isSignedIn() {
+  return request.auth.uid != null;
+}
+
+function requestMatchesUID() {
+  return request.auth.uid == request.resource.data.uid;
+}
+
+function resourceMatchesUID() {
+  return request.auth.uid == resource.data.uid;
+}
+
+function pathMatchesUID(path) {
+  return request.auth.uid == path;
+}
+
+function isLoggedInAsUser(userId) { 
+  // return keyword optional
+  return request.auth!=null && request.auth.uid == userId; 
+}
+
+type User = {
+  name?: string,
+  isInNeed?: bool
+  photoUrl?: string
+
+  // Custom type validation expressions go at the end of any type
+  allow update: if data.name.length > 0
+}
+
+type Location = {
+  inNeedOf?: int
+  isInNeed?: bool
+  name?: string
+  position?: Position
+}
+
+type Position = {
+  geohash?: string
+  geopoint?: geopoint
+}
+
+type GeoPoint = {
+  longitude: float
+  latitude: float
+}
+
+match /users/{userdoc} is User  {
+  allow read: if isSignedIn();
+  allow create, update: if pathMatchesUID(userdoc);
+  allow delete: if false;
+}
+
+match /locations/{locationDoc} {
+  allow read: if isSignedIn();
+  // We should match the object for write but since firestore has no way of checking type GeoPoint we can't
+  allow create, update: if pathMatchesUID(locationDoc);
+  allow delete: if false;
+}
+
+match /chats/{chatDoc}  {
+  //Allow users to only create and read chats. Delete and update not available right now
+  allow read:  if isSignedIn();
+  allow create, update: if isSignedIn()
+  allow delete: if false;
+  match /messages/{messageId} {
+    allow read, write: if isSignedIn();
+    // allow read, write: if request.auth.id in get(/databases/$(database)/documents/chats/$(chatId)).data.userIds;
+  }
+}

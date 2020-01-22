@@ -1,0 +1,39 @@
+{
+    "env": {
+        "browser": false,
+        "es6": true,
+        "node": true,
+        "jest": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:jest/all",
+        "plugin:prettier/recommended"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "jest"
+    ],
+    "rules": {
+        "jest/no-hooks": "off", // Off because we use firestore recommended settings
+        "jest/prefer-expect-assertions": "off", // This is off because it doesn't understand custom assert function names
+        "jest/expect-expect": [
+            "error",
+            {
+                // Custom names from firebase testing
+              "assertFunctionNames": ["assertFails", "assertSucceeds", "expect"]
+            }
+          ]
+    }
+}
