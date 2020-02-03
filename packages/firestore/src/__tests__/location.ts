@@ -8,6 +8,7 @@ import {
 } from "@firebase/testing";
 import firebase from "firebase/app";
 import { projectSetup, authedApp } from "../shared/testUtils";
+import { Location } from "../../__generated_types";
 
 /*
  * ============
@@ -17,7 +18,7 @@ import { projectSetup, authedApp } from "../shared/testUtils";
 const { projectId, coverageUrl, rules, generateUid } = projectSetup({});
 const VALID_USER_ID = generateUid();
 const OTHER_USER_ID = generateUid();
-const VALID_LOCATION_REQUEST = {
+const VALID_LOCATION_REQUEST: Location = {
   inNeedOf: 0,
   isInNeed: true,
   name: `name-${VALID_USER_ID}`,
@@ -75,7 +76,7 @@ describe("location", () => {
 
       // Act
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const createdInvalidLocation = location.set({ invalid: true } as any);
+      const createdInvalidLocation = location.set({ invalid: true });
       const createdValidLocation = location.set(VALID_LOCATION_REQUEST);
 
       // Assert

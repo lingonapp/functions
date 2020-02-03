@@ -64,15 +64,8 @@ service cloud.firestore {
       )
       && (
         !data.keys().hasAny(['geopoint'])
-        || (!(prev!=null && 'geopoint' in prev) && is____Geopoint(data.geopoint, null) || prev!=null && 'geopoint' in prev && is____Geopoint(data.geopoint, prev.geopoint))
+        || data.geopoint is latlng
       );
-    }
-    function is____GeoPoint(data, prev) {
-      return data.keys().hasAll(['longitude', 'latitude'])
-      && data.size() >= 2 && data.size() <= 2
-      && data.keys().hasOnly(['longitude', 'latitude'])
-      && (data.longitude is float || data.longitude is int)
-      && (data.latitude is float || data.latitude is int);
     }
     match /users/{userdoc} {
       function is______PathType(data, prev) {
@@ -83,8 +76,11 @@ service cloud.firestore {
       allow delete: if false;
     }
     match /locations/{locationDoc} {
+      function is______PathType(data, prev) {
+        return (!(prev!=null) && is____Location(data, null) || prev!=null && is____Location(data, prev));
+      }
       allow read: if isSignedIn();
-      allow create, update: if pathMatchesUID(locationDoc);
+      allow create, update: if (!(resource!=null && resource.data!=null) && is______PathType(request.resource.data, null) || resource!=null && resource.data!=null && is______PathType(request.resource.data, resource.data)) && (pathMatchesUID(locationDoc));
       allow delete: if false;
     }
     match /chats/{chatDoc} {

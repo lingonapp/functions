@@ -2784,10 +2784,10 @@ firebase@7.8.0:
     "@firebase/storage" "0.3.25"
     "@firebase/util" "0.2.39"
 
-fireward@1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/fireward/-/fireward-1.4.2.tgz#d454117a5a10bcb727e94ca272c6f3b6f1155f36"
-  integrity sha512-XJUQsRvhYyahZ4N3iCJ3y+PzvDNyWbj1TnY+Vwm83RNd5J+xSheUEbwEWtRfMyWEN4nMfEH/WpXexthVycOGhA==
+fireward@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/fireward/-/fireward-1.4.3.tgz#da3162759535020b33ba0d781926f325718dcbc6"
+  integrity sha512-8KRFBi1CX4oeNv3pvvOMDe+dfxb1cSyWbRnjIkKyHt023bV15ut+5nh+Tq2Gnh9LvP7sv0C1bb0EUjTy6M4HPA==
 
 flat-cache@^2.0.1:
   version "2.0.1"

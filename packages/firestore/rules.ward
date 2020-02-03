@@ -39,21 +39,16 @@ type Location = {
 
 type Position = {
   geohash?: string
-  geopoint?: geopoint
+  geopoint?: latlng
 }
 
-type GeoPoint = {
-  longitude: float
-  latitude: float
-}
-
-match /users/{userdoc} is User  {
+match /users/{userdoc} is User {
   allow read: if isSignedIn();
   allow create, update: if pathMatchesUID(userdoc);
   allow delete: if false;
 }
 
-match /locations/{locationDoc} {
+match /locations/{locationDoc} is Location {
   allow read: if isSignedIn();
   // We should match the object for write but since firestore has no way of checking type GeoPoint we can't
   allow create, update: if pathMatchesUID(locationDoc);
