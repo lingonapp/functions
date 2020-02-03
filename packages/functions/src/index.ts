@@ -8,7 +8,7 @@ admin.initializeApp({
 const db = admin.firestore();
 
 export const onUserWrite = functions.firestore
-  .document("users/{userId}")
+  .document("users/hej")
   .onWrite(async (change, context) => {
     const afterData = change.after.data();
     const userId = change.before.id;

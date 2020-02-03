@@ -46,9 +46,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var testUtils_1 = require("./../shared/testUtils");
 var testing_1 = require("@firebase/testing");
+var app_1 = __importDefault(require("firebase/app"));
 var testUtils_2 = require("../shared/testUtils");
 /*
  * ============
@@ -63,8 +67,8 @@ var VALID_LOCATION_REQUEST = {
     isInNeed: true,
     name: "name-" + VALID_USER_ID,
     position: {
-        geohash: "123"
-        // geopoint: new firestoreApp.firestore.GeoPoint(20, 10)
+        geohash: "123",
+        geopoint: new app_1.default.firestore.GeoPoint(20, 10)
     }
 };
 describe("location", function () {

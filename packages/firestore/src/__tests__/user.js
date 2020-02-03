@@ -179,7 +179,7 @@ describe("user", function () {
                 }
             });
         }); });
-        it("should allow delete your profile", function () { return __awaiter(void 0, void 0, void 0, function () {
+        it("should not allow delete your profile", function () { return __awaiter(void 0, void 0, void 0, function () {
             var authenticatedFire, deleteYourProfile;
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -190,7 +190,7 @@ describe("user", function () {
                             .doc(VALID_USER_ID)
                             .delete();
                         // Assert
-                        return [4 /*yield*/, testing_1.assertSucceeds(deleteYourProfile)];
+                        return [4 /*yield*/, testing_1.assertFails(deleteYourProfile)];
                     case 1:
                         // Assert
                         _a.sent();

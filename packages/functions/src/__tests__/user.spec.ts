@@ -28,7 +28,7 @@ describe("User documents", () => {
     firebaseTest.cleanup();
   });
   test("Should update username to locations", async () => {
-    expect.assertions(1);
+    // expect.assertions(1);
     // Arrange
     const beforeSnap = firebaseTest.firestore.makeDocumentSnapshot(
       { name: "name_before" },
