@@ -22,7 +22,7 @@ function isLoggedInAsUser(userId) {
 }
 
 type User = {
-  name?: string,
+  name?: string
   isInNeed?: bool
   photoUrl?: string
 
@@ -42,6 +42,25 @@ type Position = {
   geopoint?: latlng
 }
 
+type ChatUser = {
+  name?: string
+  photoUrl?: string
+}
+
+type Users = map
+
+type LatestMessage = {
+  from?: ChatUser
+  text?: string
+  createdAt?: string
+}
+
+type Chat = {
+  userIds?: const string[]
+  users?: Users
+  latestMessage?: LatestMessage
+}
+
 match /users/{userdoc} is User {
   allow read: if isSignedIn();
   allow create, update: if pathMatchesUID(userdoc);
@@ -55,7 +74,7 @@ match /locations/{locationDoc} is Location {
   allow delete: if false;
 }
 
-match /chats/{chatDoc}  {
+match /chats/{chatDoc} is Chat  {
   //Allow users to only create and read chats. Delete and update not available right now
   allow read:  if isSignedIn();
   allow create, update: if isSignedIn()

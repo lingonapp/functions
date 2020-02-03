@@ -7,6 +7,7 @@ import {
   assertSucceeds
 } from "@firebase/testing";
 import { projectSetup, authedApp } from "../shared/testUtils";
+import { Chat } from "../../__generated_types";
 /*
  * ============
  *    Setup
@@ -15,7 +16,7 @@ import { projectSetup, authedApp } from "../shared/testUtils";
 const { projectId, coverageUrl, rules, generateUid } = projectSetup({});
 const VALID_USER_ID = generateUid();
 const OTHER_USER_ID = generateUid();
-const VALID_CHAT = {
+const VALID_CHAT: Chat = {
   userIds: [VALID_USER_ID, OTHER_USER_ID],
   latestMessage: {
     createdAt: "2019",
@@ -25,22 +26,16 @@ const VALID_CHAT = {
       photoUrl: "https://"
     }
   },
-  usersMap: [
-    [
-      VALID_USER_ID,
-      {
-        name: "user1",
-        photoUrl: "https://"
-      }
-    ],
-    [
-      OTHER_USER_ID,
-      {
-        name: "user2",
-        photoUrl: "https://"
-      }
-    ]
-  ]
+  users: {
+    [VALID_USER_ID]: {
+      name: "user1",
+      photoUrl: "https://"
+    },
+    [OTHER_USER_ID]: {
+      name: "user2",
+      photoUrl: "https://"
+    }
+  }
 };
 const VALID_INITIATE_CHAT = {
   userIds: [VALID_USER_ID, OTHER_USER_ID]
@@ -85,7 +80,7 @@ describe("chat", () => {
 
       // Assert
       await assertSucceeds(createValidChat);
-      // await assertFails(createInvalidChat);
+      await assertFails(createInvalidChat);
     });
   });
 });

@@ -60,5 +60,20 @@ export type Position = {
   geohash?: string
   geopoint?: WardGeoPoint
 }
+export type ChatUser = {
+  name?: string
+  photoUrl?: string
+}
+export type Users = Record<string, unknown>
+export type LatestMessage = {
+  from?: ChatUser
+  text?: string
+  createdAt?: string
+}
+export type Chat = {
+  userIds?: string[]
+  users?: Users
+  latestMessage?: LatestMessage
+}
 
 

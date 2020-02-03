@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 var testing_1 = require("@firebase/testing");
 var testUtils_1 = require("../shared/testUtils");
@@ -43,7 +44,7 @@ var testUtils_1 = require("../shared/testUtils");
  *    Setup
  * ============
  */
-var _a = testUtils_1.projectSetup({}), projectId = _a.projectId, coverageUrl = _a.coverageUrl, rules = _a.rules, generateUid = _a.generateUid;
+var _b = testUtils_1.projectSetup({}), projectId = _b.projectId, coverageUrl = _b.coverageUrl, rules = _b.rules, generateUid = _b.generateUid;
 var VALID_USER_ID = generateUid();
 var OTHER_USER_ID = generateUid();
 var VALID_CHAT = {
@@ -56,22 +57,16 @@ var VALID_CHAT = {
             photoUrl: "https://"
         }
     },
-    usersMap: [
-        [
-            VALID_USER_ID,
-            {
-                name: "user1",
-                photoUrl: "https://"
-            }
-        ],
-        [
-            OTHER_USER_ID,
-            {
-                name: "user2",
-                photoUrl: "https://"
-            }
-        ]
-    ]
+    users: (_a = {},
+        _a[VALID_USER_ID] = {
+            name: "user1",
+            photoUrl: "https://"
+        },
+        _a[OTHER_USER_ID] = {
+            name: "user2",
+            photoUrl: "https://"
+        },
+        _a)
 };
 var VALID_INITIATE_CHAT = {
     userIds: [VALID_USER_ID, OTHER_USER_ID]
@@ -145,6 +140,9 @@ describe("chat", function () {
                         return [4 /*yield*/, testing_1.assertSucceeds(createValidChat)];
                     case 1:
                         // Assert
+                        _a.sent();
+                        return [4 /*yield*/, testing_1.assertFails(createInvalidChat)];
+                    case 2:
                         _a.sent();
                         return [2 /*return*/];
                 }

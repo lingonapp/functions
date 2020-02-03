@@ -67,6 +67,54 @@ service cloud.firestore {
         || data.geopoint is latlng
       );
     }
+    function is____ChatUser(data, prev) {
+      return data.size() >= 0 && data.size() <= 2
+      && data.keys().hasOnly(['name', 'photoUrl'])
+      && (
+        !data.keys().hasAny(['name'])
+        || data.name is string
+      )
+      && (
+        !data.keys().hasAny(['photoUrl'])
+        || data.photoUrl is string
+      );
+    }
+    function is____Users(data, prev) {
+      return data is map;
+    }
+    function is____LatestMessage(data, prev) {
+      return data.size() >= 0 && data.size() <= 3
+      && data.keys().hasOnly(['from', 'text', 'createdAt'])
+      && (
+        !data.keys().hasAny(['from'])
+        || (!(prev!=null && 'from' in prev) && is____ChatUser(data.from, null) || prev!=null && 'from' in prev && is____ChatUser(data.from, prev.from))
+      )
+      && (
+        !data.keys().hasAny(['text'])
+        || data.text is string
+      )
+      && (
+        !data.keys().hasAny(['createdAt'])
+        || data.createdAt is string
+      );
+    }
+    function is____Chat(data, prev) {
+      return data.size() >= 0 && data.size() <= 3
+      && data.keys().hasOnly(['userIds', 'users', 'latestMessage'])
+      && (prev==null || !prev.keys().hasAll(['userIds']) || prev.userIds==null || data.userIds==prev.userIds)
+      && (
+        !data.keys().hasAny(['userIds'])
+        || data.userIds is list
+      )
+      && (
+        !data.keys().hasAny(['users'])
+        || (!(prev!=null && 'users' in prev) && is____Users(data.users, null) || prev!=null && 'users' in prev && is____Users(data.users, prev.users))
+      )
+      && (
+        !data.keys().hasAny(['latestMessage'])
+        || (!(prev!=null && 'latestMessage' in prev) && is____LatestMessage(data.latestMessage, null) || prev!=null && 'latestMessage' in prev && is____LatestMessage(data.latestMessage, prev.latestMessage))
+      );
+    }
     match /users/{userdoc} {
       function is______PathType(data, prev) {
         return (!(prev!=null) && is____User(data, null) || prev!=null && is____User(data, prev));
@@ -84,8 +132,11 @@ service cloud.firestore {
       allow delete: if false;
     }
     match /chats/{chatDoc} {
+      function is______PathType(data, prev) {
+        return (!(prev!=null) && is____Chat(data, null) || prev!=null && is____Chat(data, prev));
+      }
       allow read: if isSignedIn();
-      allow create, update: if isSignedIn();
+      allow create, update: if (!(resource!=null && resource.data!=null) && is______PathType(request.resource.data, null) || resource!=null && resource.data!=null && is______PathType(request.resource.data, resource.data)) && (isSignedIn());
       allow delete: if false;
       match /messages/{messageId} {
         allow read, write: if isSignedIn();
